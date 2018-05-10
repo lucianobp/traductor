@@ -6,8 +6,6 @@ import shuffle from 'shuffle-array';
 class SortableComponent extends Component {
   constructor(props) {
     super(props)
-    console.log("props? " )
-    console.log(props)
     this.state = {
       items: (props.shuffleItems
         ? shuffle(props.items, { copy: true })
@@ -22,12 +20,11 @@ class SortableComponent extends Component {
   };
   render() {
     const correctList = JSON.stringify(this.state.originalItems) === JSON.stringify(this.state.items)
-    console.log("Correcto? " + correctList)
 
     return <div 
     style={{
       backgroundColor: correctList? 'green' : 'orange'
-    }}>
+    }}>`
       <SortableList items={this.state.items} onSortEnd={this.onSortEnd} lockAxis='y' originalItems={this.state.originalItems} />
     </div>
   }
