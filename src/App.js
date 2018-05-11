@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
 import './App.css';
 import shuffle from 'shuffle-array';
+import palabras from './palabras';
+
 
 class SortableComponent extends Component {
   constructor(props) {
@@ -21,15 +23,15 @@ class SortableComponent extends Component {
   render() {
     const correctList = JSON.stringify(this.state.originalItems) === JSON.stringify(this.state.items)
 
-    return <div 
-    style={{
-      backgroundColor: correctList? 'green' : 'orange'
-    }}>`
+    return <div style={{
+      backgroundColor:'blue'
+    }}>
       <SortableList items={this.state.items} onSortEnd={this.onSortEnd} lockAxis='y' originalItems={this.state.originalItems} />
     </div>
   }
 }
-//backgroundColor: correct? null : 'orange'
+//backgroundColor: correctList? 'blue' : 'orange'
+
 
 
 const SortableItem = SortableElement(({ value, correctItem }) =>
@@ -37,7 +39,7 @@ const SortableItem = SortableElement(({ value, correctItem }) =>
     style={{
       margin: 5,
       border: "1px solid black",
-      backgroundColor: correctItem? 'purple': 'red'
+      backgroundColor: correctItem? 'green': 'red'
     }}
   >
     {value}</div>
@@ -54,9 +56,9 @@ const SortableList = SortableContainer(({ items, originalItems }) => {
   );
 });
 
-const App = () => {
-  return (
 
+const App = (JSON) => {
+  return (
     <div>
       <div
         style={
@@ -69,9 +71,10 @@ const App = () => {
         {
           width: '50%',
           float: 'left'
-        }} ><SortableComponent items={['a', 'b', 'c', 'd', 'e']} shuffleItems={true} /></div>
+        }} ><SortableComponent items={palabras.left} shuffleItems={true} /></div>
     </div>
   )
+  
 }
 
 export default App;
