@@ -5,6 +5,7 @@ import shuffle from 'shuffle-array';
 import palabras from './palabras';
 
 
+
 class SortableComponent extends Component {
   constructor(props) {
     super(props)
@@ -22,11 +23,13 @@ class SortableComponent extends Component {
   };
   render() {
     const correctList = JSON.stringify(this.state.originalItems) === JSON.stringify(this.state.items)
+    const showSuccess = this.props.shuffleItems && correctList
 
     return <div style={{
-      backgroundColor:'blue'
+      backgroundColor: 'blue'
     }}>
       <SortableList items={this.state.items} onSortEnd={this.onSortEnd} lockAxis='y' originalItems={this.state.originalItems} />
+      {showSuccess ? <button onClick={this.props.nextLevel}>CORRECTO</button> : null}
     </div>
   }
 }
@@ -39,7 +42,7 @@ const SortableItem = SortableElement(({ value, correctItem }) =>
     style={{
       margin: 5,
       border: "1px solid black",
-      backgroundColor: correctItem? 'green': 'red'
+      backgroundColor: correctItem ? 'green' : 'red'
     }}
   >
     {value}</div>
@@ -47,34 +50,76 @@ const SortableItem = SortableElement(({ value, correctItem }) =>
 
 // item es correcto si: valor (en indice) = itemsOriginales (en indice)
 const SortableList = SortableContainer(({ items, originalItems }) => {
+
   return (
     <div>
       {items.map((value, index) => (
-        <SortableItem key={`item-${index}`} index={index} value={value} correctItem={originalItems[index]===value} />
+        <SortableItem key={`item-${index}`} index={index} value={value} correctItem={originalItems[index] === value} />
       ))}
     </div>
   );
 });
 
 
-const App = (JSON) => {
-  return (
-    <div>
-      <div
-        style={
+class App extends Component {
+  state = {
+    nivel: 0
+  };
+  subirNivel = () => {
+    this.setState({ nivel: 1 + this.state.nivel });
+  }
+
+  render() {
+    const Termine = this.state.nivel >= palabras.length
+    if (Termine) {
+      return (
+        <div>
+          <nav
+            style={
+              {
+
+              }}
+          >
+            <h2>Felicitaciones, haz terminado ..</h2>
+
+          </nav>
+        </div>
+      )
+    }
+    return (
+      <div >
+        <nav>
+          <div>
+            <div>
+
+              <h2>Traductor nivel {this.state.nivel + 1}</h2>
+            </div>
+
+
+          </div>
+        </nav>
+        <div
+          style={
+            {
+              width: '50%',
+              float: 'left'
+            }
+          }>{React.createElement(SortableComponent, { key: "left" + this.state.nivel, items: palabras[this.state.nivel].left, shuffleItems: false })}</div>
+        <div style={
           {
             width: '50%',
-            float: 'left'
-          }
-        }><SortableComponent items={[1, 2, 3, 4, 5]} shuffleItems={false} /></div>
-      <div style={
-        {
-          width: '50%',
-          float: 'left'
-        }} ><SortableComponent items={palabras.left} shuffleItems={true} /></div>
-    </div>
-  )
-  
+            float: 'right'
+          }} ><SortableComponent nextLevel={this.subirNivel} key={"right" + this.state.nivel} items={palabras[this.state.nivel].right} shuffleItems={true} /></div>
+        <div>
+
+        </div>
+      </div>
+
+
+    )
+
+  }
 }
+// <div>{JSON.stringify(palabras[this.state.nivel])}</div>
 
 export default App;
